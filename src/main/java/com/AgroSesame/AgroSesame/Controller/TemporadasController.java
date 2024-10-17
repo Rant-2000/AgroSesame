@@ -17,26 +17,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.AgroSesame.AgroSesame.Models.Temporadas;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 public class TemporadasController {
-
+    
     @Autowired
     private TemporadasRepo tempo;
-
+    
     @GetMapping("/")
     public String inicio() {
-
+        
         return "Conectado";
     }
-
+    
     @GetMapping("/Temporadas")
     public List<Temporadas> temporadasLista() {
-
+        
         return tempo.findAll();
     }
-
+    
     @PostMapping("/Temporadas/guardar")
     public ResponseEntity<String> guardar(@RequestBody Temporadas temporada) {
         try {
@@ -47,11 +48,10 @@ public class TemporadasController {
         }
     }
     
-    
     @PutMapping("/Temporadas/editar/{idTemporada}")
-    public ResponseEntity<String> editar(@PathVariable Long idTemporada,@RequestBody Temporadas temporada) {
+    public ResponseEntity<String> editar(@PathVariable Long idTemporada, @RequestBody Temporadas temporada) {
         try {
-            Temporadas tmp=tempo.findById(idTemporada).orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+            Temporadas tmp = tempo.findById(idTemporada).orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
             tmp.setNombre(temporada.getNombre());
             tmp.setInicio(temporada.getInicio());
             tmp.setFin(temporada.getFin());
@@ -63,5 +63,16 @@ public class TemporadasController {
         }
     }
     
-
+    @DeleteMapping("/Temporadas/borrar/{idTemporada}")
+    public ResponseEntity<String> eliminar(@PathVariable Long idTemporada) {
+        try {
+            Temporadas t = tempo.findById(idTemporada).orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+            tempo.delete(t);
+            return new ResponseEntity<>("Cliente borrado", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Cliente no encontrado", HttpStatus.NOT_FOUND);
+        }
+        
+    }
+    
 }
