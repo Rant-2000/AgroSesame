@@ -26,11 +26,6 @@ public class TemporadasController {
     @Autowired
     private TemporadasRepo tempo;
     
-    @GetMapping("/")
-    public String inicio() {
-        
-        return "Conectado";
-    }
     
     @GetMapping("/Temporadas")
     public List<Temporadas> temporadasLista() {
